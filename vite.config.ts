@@ -49,7 +49,9 @@ export default defineConfig(({ mode }) => {
         },
       }),
     ],
-    base: './',
+    // 部署路径：挂到已备案域名子路径时设 VITE_BASE=/listen/（见 .env.production）；
+    // 不设则相对路径，根目录或 IP:端口 也能用。
+    base: env.VITE_BASE || './',
     server: {
       port: 5201,
       proxy: { '/api': 'http://127.0.0.1:5200' },
