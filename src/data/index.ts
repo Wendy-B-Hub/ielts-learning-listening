@@ -1,0 +1,24 @@
+import mainRaw from './vocab_main.json'
+import phrasesRaw from './vocab_phrases.json'
+
+export interface Word { w: string; m?: string }
+
+function clean(raw: { words?: unknown[] }): Word[] {
+  return ((raw.words ?? []) as Word[]).filter(x => x?.w)
+}
+
+export const vocabData: Record<'main' | 'phrases', Word[]> = {
+  main: clean(mainRaw as { words?: unknown[] }),
+  phrases: clean(phrasesRaw as { words?: unknown[] }),
+}
+
+const VOICE = 'zh_female_yingyujiaoxue_uranus_bigtts'
+const COS_BASE = (import.meta.env.VITE_COS_BASE_URL as string | undefined)?.replace(/\/$/, '')
+
+/** 构造音频 URL：生产环境用 COS，开发环境走本地 API 代理 */
+export function audioUrl(word: string): string {
+  if (COS_BASE) {
+    return `${COS_BASE}/ielts-listening-audio/${encodeURIComponent(word)}.mp3`
+  }
+  return `/api/tts/audio?${new URLSearchParams({ text: word, voice: VOICE })}`
+}
