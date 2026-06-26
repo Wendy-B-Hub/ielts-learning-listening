@@ -8,6 +8,8 @@ const router = useRouter()
 
 const RATES = [0.75, 1, 1.25, 1.5, 1.8, 2]
 
+const cat: 'main' | 'phrases' = route.query.cat === 'phrases' ? 'phrases' : 'main'
+
 const words = ref<Word[]>([])
 const loading = ref(false)
 const err = ref('')
@@ -83,7 +85,7 @@ async function playCard() {
   try {
     let url = audioCache.get(w.w)
     if (!url) {
-      const resp = await fetch(audioUrl(w.w))
+      const resp = await fetch(audioUrl(w.w, cat))
       if (!resp.ok) throw new Error('音频加载失败 ' + resp.status)
       url = URL.createObjectURL(await resp.blob())
       audioCache.set(w.w, url)
@@ -174,8 +176,7 @@ function toggleAutoPlay() {
 
 onMounted(() => {
   window.addEventListener('keydown', onKey)
-  const cat = (route.query.cat as string) || 'main'
-  const ws = vocabData[cat as 'main' | 'phrases'] ?? vocabData.main
+  const ws = vocabData[cat] ?? vocabData.main
   if (!ws.length) { err.value = '词汇库为空'; return }
   startRound(ws)
 })

@@ -7,6 +7,7 @@
     "dev": "vite",
     "export-vocab": "node scripts/export-vocab.mjs",
     "download-audio": "node scripts/download-audio.mjs",
+    "collect-audio": "node scripts/collect-audio.mjs",
     "build": "vite build",
     "build:local": "node scripts/export-vocab.mjs && vite build",
     "preview": "vite preview"

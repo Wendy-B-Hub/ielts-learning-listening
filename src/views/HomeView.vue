@@ -25,7 +25,7 @@ async function playWord(w: string) {
   try {
     let url = audioCache.get(w)
     if (!url) {
-      const src = audioUrl(w)
+      const src = audioUrl(w, cat.value)
       const r = await fetch(src)
       if (!r.ok) throw new Error('')
       url = URL.createObjectURL(await r.blob())
